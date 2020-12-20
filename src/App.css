@@ -131,3 +131,50 @@ input[type='text'] {
     grid-template-columns: 1fr;
   }
 }
+
+.single-page {
+  display: flex;
+}
+.single-page .left, .single-page .right {
+  flex: 1;
+}
+.single-page .left {
+  margin-right: 2rem;
+}
+.single-page p {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: flex;
+}
+.single-page span.soft {
+  color: #137b3b;
+  font-size: 1.8rem;
+  flex: 1 1;
+}
+.single-page span.white {
+  display: inline-block;
+  color: white;
+  flex: 1;
+}
+.single-page img {
+  width: 100%;
+  display: block;
+}
+.single-page .quote {
+  margin-top: 8rem;
+  display: block;
+  text-align: center;
+  font-size: 1.6rem;
+  font-style: italic;
+}
+@media (max-width: 800px) {
+  .single-page {
+    flex-direction: column;
+  }
+  .single-page .quote {
+    margin: 4rem 0;
+  }
+  .single-page .left {
+    margin-right: 0;
+  }
+}

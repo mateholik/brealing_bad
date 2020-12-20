@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import axios from 'axios'
 import Search from './components/ui/Search'
 import Header from './components/ui/Header'
 import CharacterGrid from './components/characters/CharacterGrid'
+import SinglePage from './components/characters/SinglePage'
 import './App.css';
 
 const App = () => {
@@ -13,7 +15,6 @@ const App = () => {
   useEffect(() => {
     const fetchItems = async () => {
       const result = await axios.get(`https://www.breakingbadapi.com/api/characters?name=${query}`)
-      console.log(result.data);
       setItems(result.data)
       setIsLoading(false)
     }
@@ -23,14 +24,20 @@ const App = () => {
   const onSearch = (q) => {
     setIsLoading(true)
     setQuery(q)
-    console.log(q);
   }
 
   return (
     <div className="container">
-      <Header />
-      <Search getQuery={onSearch} />
-      <CharacterGrid items={items} isLoading={isLoading} />
+      <Router>
+        <Header />
+        <Route path="/" exact render={props => (
+          <div>
+            <Search getQuery={onSearch} />
+            <CharacterGrid items={items} isLoading={isLoading} />
+          </div>
+        )} />
+        <Route path="/:id" render={(props) => <SinglePage items={items} />} />
+      </Router>
     </div>
   );
 }
