@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import axios from 'axios'
 import Search from './components/ui/Search'
 import Header from './components/ui/Header'
@@ -9,14 +9,20 @@ import './App.css';
 
 const App = () => {
   const [items, setItems] = useState([])
-  const [isLoading, setIsLoading] = useState([true])
+  const [isLoading, setIsLoading] = useState(true)
   const [query, setQuery] = useState('')
 
   useEffect(() => {
     const fetchItems = async () => {
-      const result = await axios.get(`https://www.breakingbadapi.com/api/characters?name=${query}`)
-      setItems(result.data)
-      setIsLoading(false)
+      try {
+        const result = await axios.get(`https://www.breakingbadapi.com/api/characters?name=${query}`)
+        setItems(result.data)
+      } catch (error) {
+        console.error('Error fetching characters:', error)
+        setItems([])
+      } finally {
+        setIsLoading(false)
+      }
     }
     fetchItems()
   }, [query])
@@ -30,13 +36,15 @@ const App = () => {
     <div className="container">
       <Router>
         <Header />
-        <Route path="/" exact render={props => (
-          <div>
-            <Search getQuery={onSearch} />
-            <CharacterGrid items={items} isLoading={isLoading} />
-          </div>
-        )} />
-        <Route path="/:id" render={(props) => <SinglePage items={items} />} />
+        <Routes>
+          <Route path="/" element={
+            <div>
+              <Search getQuery={onSearch} />
+              <CharacterGrid items={items} isLoading={isLoading} />
+            </div>
+          } />
+          <Route path="/:id" element={<SinglePage items={items} />} />
+        </Routes>
       </Router>
     </div>
   );
